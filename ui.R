@@ -7,6 +7,10 @@ library(rmarkdown)
 library(plotly)
 library(DT)
 
+##Load code
+source("TB_model.R")
+source("graph_tb_model.R")
+
 sidebar <- dashboardSidebar(
   hr(),
   sidebarMenu(id = "menu",
@@ -18,7 +22,33 @@ sidebar <- dashboardSidebar(
                        menuSubItem("server.R", tabName = "server", icon = icon("angle-right"))
               )
   ),
-  conditionalPanel(condition = 'input.menu == "tb-model"'),
+  conditionalPanel(condition = 'input.menu == "tb-model"',
+                   sliderInput("ecr",
+                               "Effective Contacts (per year)",
+                               min = 0, 
+                               max = 20,
+                               value = 15),
+                   sliderInput("wks_inf_p", 
+                               "Avg. No. of Weeks Infectious (Positive Sputum Smear)",
+                               min = 0,
+                               max = 102,
+                               value = 52 ),
+                   sliderInput("wks_inf_n", 
+                               "Avg. No. of Weeks Infectious (Negative Sputum Smear)",
+                               min = 0,
+                               max = 190,
+                               value = 95),
+                   sliderInput("prot_init_reint",
+                               "Protection from reinfection relative to infection",
+                               min = 0, 
+                               max = 1, 
+                               value = 0.65),
+                   checkboxInput("burn_in",
+                                 "Show burn in",
+                                 value = FALSE)
+                   
+                   
+  ),
   hr(),
   helpText("Developed by ", a("Sam Abbott", href = "http://samabbott.co.uk"), 
            style = "padding-left:1em; padding-right:1em;position:absolute; bottom:1em; ")
@@ -31,16 +61,31 @@ body <- dashboardBody(
               tabBox(width = 12, 
                      title = "Model Plots", 
                      side = "right",
-                     tabPanel(title = "Rates"
-                              )
+                     tabPanel(title = "Rates",
+                              plotlyOutput("plot_rates")
+                              ),
+                     tabPanel(title = "Annual Risk",
+                              plotlyOutput("plot_annual_risk")
                      ),
+                     tabPanel(title = "Proportions",
+                              plotlyOutput("plot_props")
+                     )
+              ),
                      tabBox(width = 12, 
                             title = "Model Statistics", 
                             side = "right",
-                            tabPanel(title = "Rates"
+                            tabPanel(title = "Rates and Annual Risk",
+                                     DT::dataTableOutput("rates_table")
+                            ),
+                            tabPanel(title = "Proportions", 
+                                     DT::dataTableOutput("props_table")
+                            ),
+                            tabPanel(title = "Trajectory",
+                                     DT::dataTableOutput("traj_table")
                             )
                             )
-    )),
+              )
+            ),
     tabItem(tabName = "readme",
             withMathJax(), 
             includeMarkdown("README.md")

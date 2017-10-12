@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 ## Manual Install
 
-To install and run the shiny app locally on your own computer you will need to first install [R](https://www.r-project.org/), it is also suggested that you install [Rstudio](https://www.rstudio.com/products/rstudio/download/). After downloading the source code from [this repository](https://www.github.com/seabbs/intro_to_tb_models) click on the `exploreidmodels.Rprof` file, this will open an Rstudio window. Type the following code into the command line;
+To install and run the shiny app locally on your own computer you will need to first install [R](https://www.r-project.org/), it is also suggested that you install [Rstudio](https://www.rstudio.com/products/rstudio/download/). After downloading the source code from [this repository](https://www.github.com/seabbs/intro_to_tb_models) click on the `intro_to_tb_models.Rprof` file, this will open an Rstudio window. Type the following code into the command line;
 
 ```{r, eval = FALSE}
 install.packages("shiny")
