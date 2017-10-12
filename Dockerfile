@@ -15,16 +15,6 @@ RUN apt-get update && \
     libproj-dev \
     && apt-get clean
 
-## install igraph due to CRAN bug from github
-RUN install2.r --error \
-      --deps TRUE \
-      pkgconfig \
-      irlba \
-      remotes
-
-RUN installGithub.r igraph/rigraph \
-&& rm -rf /tmp/downloaded_packages/
-
 ## Install cran packages
 RUN install2.r --error \
     --deps TRUE \
@@ -32,7 +22,7 @@ RUN install2.r --error \
      tidyverse \
      DT \
      rmarkdown \
-     plotly \
+     plotly
 
 RUN rm -r /srv/shiny-server/*
 ADD . /srv/shiny-server/intro_to_to_models

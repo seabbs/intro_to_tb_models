@@ -34,7 +34,7 @@ sidebar <- dashboardSidebar(
                                "Avg. No. of Weeks Infectious (Positive Sputum Smear)",
                                min = 0,
                                max = 102,
-                               value = 52 ),
+                               value = 51 ),
                    sliderInput("wks_inf_n", 
                                "Avg. No. of Weeks Infectious (Negative Sputum Smear)",
                                min = 0,

@@ -21,7 +21,7 @@ shinyServer(function(input, output) {
     initial <- init_TB_model()
     times <- seq(0, 2024*as.numeric(input$timestep), 1)
     params <- params_TB_model(ecr_pyr = input$ecr, wks_infect_n = input$wks_inf_n,
-                              wks_infect_p = input$wks_inf_n,  prot_reinf = input$prot_init_reint,
+                              wks_infect_p = input$wks_inf_p,  prot_reinf = input$prot_init_reint,
                               timestep = as.numeric(input$timestep))
     
     model_traj <- deSolve::lsoda(initial, times, TB_model, params)

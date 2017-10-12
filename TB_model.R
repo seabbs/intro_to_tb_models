@@ -16,7 +16,7 @@ TB_model <- function(t, x, params) {
   with(as.list(params),{
     
     ## Specify total population
-    N = sum(x)
+    N = S + H + L + L_r + I_n + I_p + R
     
     ## Force of infection
     foi = ecr * (rel_inf_n * I_n + I_p)/N
@@ -93,7 +93,7 @@ params_TB_model <- function(ecr_pyr = 15, wks_infect_n = 95,
   onset_yr <- 0.03
 
   ## proportion that are smear negative
-  prop_n <- 0.7
+  prop_p <- 0.7
   
   ## Mortality rates
   mu <- 0.021
@@ -101,17 +101,17 @@ params_TB_model <- function(ecr_pyr = 15, wks_infect_n = 95,
   mu_p <- 0.22
   
   ## Cure rate
-  natural_cure <- 0.3
+  natural_cure <- 0.2
   
   ## parameters
   params <- list(ecr = ecr_pyr / timestep,
                  rate_low_latent = 1 / (5 * timestep),
                  rel_inf_n = 0.22,
                  prim_dis_onset = onset_yr / timestep, 
-                 sec_dis_onset  = (onset_yr * (1 - prot_reinf))/timestep,
-                 reinf_dis_onset = 0.0003/timestep,
-                 prop_n = prop_n, 
-                 prop_p = 1 - prop_n,
+                 sec_dis_onset  = 0.0003/timestep,
+                 reinf_dis_onset = (onset_yr * (1 - prot_reinf))/timestep,
+                 prop_n = 1 - prop_p, 
+                 prop_p = prop_p,
                  mu = mu/timestep,
                  mu_n = mu_n/timestep,
                  mu_p = mu_p/timestep,

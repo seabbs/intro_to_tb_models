@@ -16,7 +16,7 @@ graph_rates <- function(df){
 
 graph_annual_risk <- function(df) {
   plot <-  df %>% 
-    ggplot(aes(x = Year, y = `Annual risk of infection`, colour = `Annual risk of infection`)) +
+    ggplot(aes(x = Year, y = `Annual risk of infection`)) +
     geom_line() +
     theme_minimal() +
     theme(legend.position = "none") +
