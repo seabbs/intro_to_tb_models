@@ -1,7 +1,6 @@
 #Load packages
 library(shiny)
 library(shinydashboard)
-library(shinyBS)
 library(tidyverse)
 library(plotly)
 library(DT)
@@ -116,5 +115,15 @@ shinyServer(function(input, output) {
                                             file.copy("server.R", file, overwrite = TRUE)
                                             }
                                           )
+  output$downloadData4 <- downloadHandler(filename = "TB_model.R",
+                                          content = function(file) {
+                                            file.copy("TB_model.R", file, overwrite = TRUE)
+                                          }
+  )
+  output$downloadData5 <- downloadHandler(filename = "graph_tb_model.R",
+                                          content = function(file) {
+                                            file.copy("graph_tb_model.R", file, overwrite = TRUE)
+                                          }
+  )
   
 })

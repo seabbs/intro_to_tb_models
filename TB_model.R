@@ -32,8 +32,8 @@ TB_model <- function(t, x, params) {
     dH = foi * S - prim_dis_onset * H - rate_low_latent * H - mu * H
     dL = rate_low_latent * (H + L_r) - foi * L - sec_dis_onset * L - mu * L
     dL_r = foi * L + foi * R - reinf_dis_onset * L_r - rate_low_latent * L_r - mu * L_r
-    dI_n = prop_n * total_infected + natural_cure * I_n - detect_recover_n * I_n - (mu + mu_n) * I_n
-    dI_p = prop_p * total_infected + natural_cure * I_p - detect_recover_p * I_p - (mu + mu_p) * I_p
+    dI_n = prop_n * total_infected - natural_cure * I_n - detect_recover_n * I_n - (mu + mu_n) * I_n
+    dI_p = prop_p * total_infected - natural_cure * I_p - detect_recover_p * I_p - (mu + mu_p) * I_p
     dR = natural_cure * (I_n + I_p) + detect_recover_n * I_n + detect_recover_p * I_p - relapse * R - foi * R - mu * R
     
     ## derivatives
@@ -63,8 +63,6 @@ TB_model <- function(t, x, params) {
                             TB_mort_rate_pHK = summary_measures["total_new_deaths.I_n"] * 100000 * timestep / N,
                             TB_prevalence = (I_n + I_p)/N
       )
-
-
   
     ## output
     list(derivatives, summary_measures)
@@ -96,6 +94,15 @@ params_TB_model <- function(ecr_pyr = 15, wks_infect_n = 95,
 
   ## proportion that are smear negative
   prop_n <- 0.7
+  
+  ## Mortality rates
+  mu <- 0.021
+  mu_n <- 0.19
+  mu_p <- 0.22
+  
+  ## Cure rate
+  natural_cure <- 0.3
+  
   ## parameters
   params <- list(ecr = ecr_pyr / timestep,
                  rate_low_latent = 1 / (5 * timestep),
@@ -105,16 +112,15 @@ params_TB_model <- function(ecr_pyr = 15, wks_infect_n = 95,
                  reinf_dis_onset = 0.0003/timestep,
                  prop_n = prop_n, 
                  prop_p = 1 - prop_n,
-                 mu = 0.021/timestep,
-                 mu_n = 0.19/timestep,
-                 mu_p = 0.22/timestep,
-                 detect_recover_n = 52/(wks_infect_n * timestep),
-                 detect_recover_p = 52/(wks_infect_p * timestep),
-                 natural_cure = 0.3/timestep,
+                 mu = mu/timestep,
+                 mu_n = mu_n/timestep,
+                 mu_p = mu_p/timestep,
+                 detect_recover_n = 52/(wks_infect_n * timestep) - (natural_cure + mu + mu_n)/timestep,
+                 detect_recover_p = 52/(wks_infect_p * timestep)  - (natural_cure + mu + mu_p)/timestep,
+                 natural_cure = natural_cure/timestep,
                  relapse = 0.001/timestep,
                  timestep = timestep
                  )
-  
   return(params)
 }
 

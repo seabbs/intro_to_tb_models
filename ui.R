@@ -1,7 +1,6 @@
 ## Load packages
 library(shiny)
 library(shinydashboard)
-library(shinyBS)
 library(tidyverse)
 library(rmarkdown)
 library(plotly)
@@ -19,7 +18,10 @@ sidebar <- dashboardSidebar(
               menuItem("Code",  icon = icon("code"),
                        menuSubItem("Github", href = "https://github.com/seabbs/intro_to_tb_models", icon = icon("github")),
                        menuSubItem("ui.R", tabName = "ui", icon = icon("angle-right")),
-                       menuSubItem("server.R", tabName = "server", icon = icon("angle-right"))
+                       menuSubItem("server.R", tabName = "server", icon = icon("angle-right")),
+                       menuSubItem("TB_model.R", tabName = "tb_model", icon = icon("angle-right")),
+                       menuSubItem("graph_tb_model.R", tabName = "graph_tb_model", icon = icon("angle-right"))
+                       
               )
   ),
   conditionalPanel(condition = 'input.menu == "tb-model"',
@@ -109,6 +111,23 @@ body <- dashboardBody(
                  br(),br(),
                  pre(includeText("server.R"))
             )
+            
+    ),
+    tabItem(tabName = "tb_model",
+            box( width = NULL, status = "primary", solidHeader = TRUE, title = "TB Model",
+                 downloadButton('downloadData4', 'Download'),
+                 br(),br(),
+                 pre(includeText("TB_model.R"))
+            )
+            
+    ),
+    tabItem(tabName = "graph_tb_model",
+            box( width = NULL, status = "primary", solidHeader = TRUE, title = "TB Model Graphs",
+                 downloadButton('downloadData5', 'Download'),
+                 br(),br(),
+                 pre(includeText("graph_tb_model.R"))
+            )
+            
     )
   )
 )
