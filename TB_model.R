@@ -87,13 +87,13 @@ init_TB_model <- function(total_pop = 100000) {
 
 
 ## Set parameters for model
-params_TB_model <- function(ecr_pyr = 15, wks_infect_n = 95, wks_infect_p = 51, timestep = 52) {
+params_TB_model <- function(ecr_pyr = 15, wks_infect_n = 95,
+                            wks_infect_p = 51, prot_reinf = 0.65,
+                            timestep = 52) {
   
   ## yearly rate of disease onset
   onset_yr <- 0.03
-  ##protection from reinfection
-  prot_reinf <- 0.65 
-  
+
   ## proportion that are smear negative
   prop_n <- 0.7
   ## parameters
@@ -103,7 +103,7 @@ params_TB_model <- function(ecr_pyr = 15, wks_infect_n = 95, wks_infect_p = 51, 
                  prim_dis_onset = onset_yr / timestep, 
                  sec_dis_onset  = (onset_yr * (1 - prot_reinf))/timestep,
                  reinf_dis_onset = 0.0003/timestep,
-                 prop_n = 0.7, 
+                 prop_n = prop_n, 
                  prop_p = 1 - prop_n,
                  mu = 0.021/timestep,
                  mu_n = 0.19/timestep,

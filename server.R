@@ -19,11 +19,11 @@ shinyServer(function(input, output) {
   ## Run TB model
   model_traj <- reactive({
     ##Check model runs
-    timestep <- 1
     initial <- init_TB_model()
-    times <- seq(0, 2024*timestep, 1)
+    times <- seq(0, 2024*as.numeric(input$timestep), 1)
     params <- params_TB_model(ecr_pyr = input$ecr, wks_infect_n = input$wks_inf_n,
-                              wks_infect_p = input$wks_inf_n, timestep = timestep)
+                              wks_infect_p = input$wks_inf_n,  prot_reinf = input$prot_init_reint,
+                              timestep = as.numeric(input$timestep))
     
     model_traj <- deSolve::lsoda(initial, times, TB_model, params)
     

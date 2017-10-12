@@ -43,11 +43,17 @@ sidebar <- dashboardSidebar(
                                min = 0, 
                                max = 1, 
                                value = 0.65),
+                   selectInput("timestep",
+                               "Set timestep",
+                               choices = list(
+                                 Week = 52,
+                                 Month = 12,
+                                 Year = 1),
+                               selected = 1
+                   ),
                    checkboxInput("burn_in",
                                  "Show burn in",
                                  value = FALSE)
-                   
-                   
   ),
   hr(),
   helpText("Developed by ", a("Sam Abbott", href = "http://samabbott.co.uk"), 
