@@ -2,6 +2,8 @@
 Introduction to TB Models
 =========================
 
+A shiny app reproducing the models used in the Introduction to Tuberculosis modelling course practicals, run by [TB MAC](http://tb-mac.org/) at the [2017 Union conference](http://guadalajara.worldlunghealth.org/about-us). See the [TB MAC](http://tb-mac.org/) website for course materials and further resources.
+
 Installing the shiny app locally
 --------------------------------
 
@@ -13,7 +15,7 @@ To install and run the shiny app locally on your own computer you will need to f
 ``` r
 install.packages("shiny")
 install.packages("shinydashboard")
-install.packages("shinyBS")
+install.packages("DT")
 install.packages("tidyverse")
 install.packages("rmarkdown")
 ```
