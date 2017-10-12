@@ -126,7 +126,7 @@ params_TB_model <- function(ecr_pyr = 15, wks_infect_n = 95,
 
                       
 ##Summarise model rates
-sum_model_rates <- function(model_traj, start_time = 2010) {
+sum_model_rates <- function(model_traj, start_time = 2010, round = NULL) {
   model_traj <- as.data.frame(model_traj) %>% as_tibble
   ## Filter based on start time
   model_traj <- model_traj[unlist(model_traj[["year"]]) >= start_time, ]
@@ -137,6 +137,7 @@ sum_model_rates <- function(model_traj, start_time = 2010) {
                      `TB mortality rate` = TB_mort_rate_pHK.total_new_deaths.I_n,
                      `Annual risk of infection` = ann_risk_inf.I_n)
   })
+  
 }
 
 
@@ -153,6 +154,7 @@ sum_model_proportions <- function(model_traj, start_time = 2010) {
                      `Recent reinfection` = prop_dis_recent_reinf.total_new_reinf_inf.L_r,
                      `Reactivation` = prop_dis_react.total_new_react.L)
   })
+  
 }
 
                                                                                                                                                  

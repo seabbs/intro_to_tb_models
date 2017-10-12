@@ -22,7 +22,7 @@ RUN install2.r --error \
      tidyverse \
      DT \
      rmarkdown \
-     plotly
+     plotly 
 
 RUN rm -r /srv/shiny-server/*
 ADD . /srv/shiny-server/intro_to_to_models
