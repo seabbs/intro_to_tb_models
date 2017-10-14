@@ -30,8 +30,10 @@ TB_model_diag <- function(t, x, params) {
     ## Evaluate if intervention is in place
     if (intervention == 1 && t/timestep >= intervention_start) { 
       detect_recover_n <- interv_detect_recover_n 
+      detect_only_n <- interv_detect_only_n
     } else{
         detect_recover_n <- preinterv_detect_recover_n 
+        detect_only_n <- preinterv_detect_only_n 
     }
     
     ## Derivative Expressions
