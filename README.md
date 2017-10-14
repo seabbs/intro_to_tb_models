@@ -2,7 +2,7 @@
 Introduction to TB Models
 =========================
 
-A shiny app reproducing the models used in the Introduction to Tuberculosis modelling course practicals, run by [TB MAC](http://tb-mac.org/) at the [2017 Union conference](http://guadalajara.worldlunghealth.org/about-us). See the [TB MAC](http://tb-mac.org/) website for course materials and further resources. The model used in this course, and reproduced in this shiny app, was based on one published by [Lin et al.](http://www.who.int/bulletin/volumes/90/10/11-101436.pdf)
+A shiny app reproducing the models used in the Introduction to Tuberculosis modelling course practicals, run by [TB MAC](http://tb-mac.org/) at the [2017 Union conference](http://guadalajara.worldlunghealth.org/about-us). See the [TB MAC](http://tb-mac.org/) website for course materials and further resources. The models used in this course, and reproduced in this shiny app, were based on one published by [Lin et al.](http://www.who.int/bulletin/volumes/90/10/11-101436.pdf)
 
 Installing the shiny app locally
 --------------------------------

@@ -10,6 +10,7 @@ library(DT)
 ##Load code
 source("TB_model.R")
 source("graph_tb_model.R")
+source("TB_model_diag.R")
 
 sidebar <- dashboardSidebar(
   hr(),
@@ -22,6 +23,7 @@ sidebar <- dashboardSidebar(
                        menuSubItem("ui.R", tabName = "ui", icon = icon("angle-right")),
                        menuSubItem("server.R", tabName = "server", icon = icon("angle-right")),
                        menuSubItem("TB_model.R", tabName = "tb_model", icon = icon("angle-right")),
+                       menuSubItem("TB_model_diag.R", tabName = "tb_model_diag", icon = icon("angle-right")),
                        menuSubItem("graph_tb_model.R", tabName = "graph_tb_model", icon = icon("angle-right"))
                        
               )
@@ -67,6 +69,9 @@ sidebar <- dashboardSidebar(
                                max = 20,
                                value = 15,
                                step = 0.5),
+                   checkboxInput("intervention",
+                                 "Intervention",
+                                 value = TRUE),
                    selectInput("timestep_diag",
                                "Set timestep",
                                choices = list(
@@ -151,14 +156,14 @@ body <- dashboardBody(
             includeMarkdown("README.md")
     ),
     tabItem(tabName = "ui",
-            box( width = NULL, status = "primary", solidHeader = TRUE, title = "UI",
+            box( width = NULL, status = "primary", solidHeader = FALSE, title = "UI",
                  downloadButton('downloadData2', 'Download'),
                  br(),br(),
                  pre(includeText("ui.R"))
             )
     ),
     tabItem(tabName = "server",
-            box( width = NULL, status = "primary", solidHeader = TRUE, title = "Server",
+            box( width = NULL, status = "primary", solidHeader = FALSE, title = "Server",
                  downloadButton('downloadData3', 'Download'),
                  br(),br(),
                  pre(includeText("server.R"))
@@ -166,7 +171,7 @@ body <- dashboardBody(
             
     ),
     tabItem(tabName = "tb_model",
-            box( width = NULL, status = "primary", solidHeader = TRUE, title = "TB Model",
+            box( width = NULL, status = "primary", solidHeader = FALSE, title = "TB Model",
                  downloadButton('downloadData4', 'Download'),
                  br(),br(),
                  pre(includeText("TB_model.R"))
@@ -174,10 +179,26 @@ body <- dashboardBody(
             
     ),
     tabItem(tabName = "graph_tb_model",
-            box( width = NULL, status = "primary", solidHeader = TRUE, title = "TB Model Graphs",
+            box( width = NULL, status = "primary", solidHeader = FALSE, title = "TB Model Graphs",
                  downloadButton('downloadData5', 'Download'),
                  br(),br(),
                  pre(includeText("graph_tb_model.R"))
+            )
+            
+    ),
+    tabItem(tabName = "tb_model_diag",
+            box( width = NULL, status = "primary", solidHeader = FALSE, title = "TB Model with Diagnostics",
+                 downloadButton('downloadData6', 'Download'),
+                 br(),br(),
+                 pre(includeText("TB_model_diag.R"))
+            )
+            
+    ),
+    tabItem(tabName = "graph_tb_model_diag",
+            box( width = NULL, status = "primary", solidHeader = FALSE, title = "TB Model with Diagnostics Graphs",
+                 downloadButton('downloadData7', 'Download'),
+                 br(),br(),
+                 pre(includeText("graph_tb_model_diag.R"))
             )
             
     )

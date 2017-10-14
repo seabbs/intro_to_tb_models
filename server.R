@@ -10,6 +10,7 @@ library(deSolve)
 ##Load code
 source("TB_model.R")
 source("graph_tb_model.R")
+source("TB_model_diag.R")
 
 ## Stop spurious warnings
 options(warn = -1)
@@ -113,11 +114,11 @@ shinyServer(function(input, output) {
     ##Check model runs
     initial <- init_TB_model()
     times <- seq(0, 2024*as.numeric(input$timestep_diag), 1)
-    params <- params_TB_model(ecr_pyr = input$ecr_diag, wks_infect_n = 95,
+    params <- params_TB_model_diag(ecr_pyr = input$ecr_diag, wks_infect_n = 95,
                               wks_infect_p = 51,  prot_reinf = 0.65,
                               timestep = as.numeric(input$timestep_diag))
     
-    model_traj <- deSolve::lsoda(initial, times, TB_model, params)
+    model_traj <- deSolve::lsoda(initial, times, TB_model_diag, params)
     
   })
   
@@ -215,6 +216,18 @@ shinyServer(function(input, output) {
   output$downloadData5 <- downloadHandler(filename = "graph_tb_model.R",
                                           content = function(file) {
                                             file.copy("graph_tb_model.R", file, overwrite = TRUE)
+                                          }
+  )
+  
+  output$downloadData6 <- downloadHandler(filename = "tb_model_diag.R",
+                                          content = function(file) {
+                                            file.copy("tb_model_diag.R", file, overwrite = TRUE)
+                                          }
+  )
+  
+  output$downloadData7 <- downloadHandler(filename = "graph_tb_model_diag.R",
+                                          content = function(file) {
+                                            file.copy("graph_tb_model_diag.R", file, overwrite = TRUE)
                                           }
   )
   
