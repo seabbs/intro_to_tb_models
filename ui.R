@@ -15,6 +15,7 @@ sidebar <- dashboardSidebar(
   hr(),
   sidebarMenu(id = "menu",
               menuItem("TB model", tabName = "tb-model", icon = icon("line-chart")),
+              menuItem("TB model with diagnostics", tabName = "tb-model-diag", icon = icon("line-chart")),
               menuItem("About", tabName = "readme", icon = icon("mortar-board"), selected = TRUE),
               menuItem("Code",  icon = icon("code"),
                        menuSubItem("Github", href = "https://github.com/seabbs/intro_to_tb_models", icon = icon("github")),
@@ -59,6 +60,25 @@ sidebar <- dashboardSidebar(
                                  "Show burn in",
                                  value = FALSE)
   ),
+  conditionalPanel(condition = 'input.menu == "tb-model-diag"',
+                   sliderInput("ecr_diag",
+                               "Effective Contacts (per year)",
+                               min = 0, 
+                               max = 20,
+                               value = 15,
+                               step = 0.5),
+                   selectInput("timestep_diag",
+                               "Set timestep",
+                               choices = list(
+                                 Week = 52,
+                                 Month = 12,
+                                 Year = 1),
+                               selected = 1
+                   ),
+                   checkboxInput("burn_in_diag",
+                                 "Show burn in",
+                                 value = FALSE)
+  ),
   hr(),
   helpText("Developed by ", a("Sam Abbott", href = "http://samabbott.co.uk"), 
            style = "padding-left:1em; padding-right:1em;position:absolute; bottom:1em; ")
@@ -96,6 +116,36 @@ body <- dashboardBody(
                             )
               )
             ),
+    tabItem(tabName = "tb-model-diag",
+            fluidRow(
+              tabBox(width = 12, 
+                     title = "Model Plots", 
+                     side = "right",
+                     tabPanel(title = "Rates",
+                              plotlyOutput("plot_rates_diag")
+                     ),
+                     tabPanel(title = "Annual Risk",
+                              plotlyOutput("plot_annual_risk_diag")
+                     ),
+                     tabPanel(title = "Proportions",
+                              plotlyOutput("plot_props_diag")
+                     )
+              ),
+              tabBox(width = 12, 
+                     title = "Model Statistics", 
+                     side = "right",
+                     tabPanel(title = "Rates and Annual Risk",
+                              DT::dataTableOutput("rates_table_diag")
+                     ),
+                     tabPanel(title = "Proportions", 
+                              DT::dataTableOutput("props_table_diag")
+                     ),
+                     tabPanel(title = "Trajectory",
+                              DT::dataTableOutput("traj_table_diag")
+                     )
+              )
+            )
+    ),
     tabItem(tabName = "readme",
             withMathJax(), 
             includeMarkdown("README.md")
