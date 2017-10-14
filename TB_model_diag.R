@@ -27,6 +27,13 @@ TB_model_diag <- function(t, x, params) {
     ##Births
     births <- mu * N + mu_n * I_n + mu_p * I_p
     
+    ## Evaluate if intervention is in place
+    if (intervention == 1 && t/timestep >= intervention_start) { 
+      detect_recover_n <- interv_detect_recover_n 
+    } else{
+        detect_recover_n <- preinterv_detect_recover_n 
+    }
+    
     ## Derivative Expressions
     dS = births - foi * S - mu * S
     dH = foi * S - prim_dis_onset * H - rate_low_latent * H - mu * H
@@ -70,8 +77,8 @@ TB_model_diag <- function(t, x, params) {
 }
 
 ## Set parameters for model
-params_TB_model_diag <- function(ecr_pyr = 15, wks_infect_n = 95,
-                            wks_infect_p = 51, prot_reinf = 0.65,
+params_TB_model_diag <- function(ecr_pyr = 15, wks_health_service = 52,
+                            prot_reinf = 0.65,
                             intervention = 1, intervention_start = 2014,
                             timestep = 52) {
   
@@ -101,20 +108,49 @@ params_TB_model_diag <- function(ecr_pyr = 15, wks_infect_n = 95,
                  mu = mu/timestep,
                  mu_n = mu_n/timestep,
                  mu_p = mu_p/timestep,
-                 detect_recover_n = 52/(wks_infect_n * timestep) - (natural_cure + mu + mu_n)/timestep,
-                 detect_recover_p = 52/(wks_infect_p * timestep)  - (natural_cure + mu + mu_p)/timestep,
                  natural_cure = natural_cure/timestep,
                  relapse = 0.001/timestep,
                  timestep = timestep
-                 )
+  )
   
-  ## Intervention related parameters
+  ## Treatment pathway parameters - weeks to treatmetns
+  wks_to_health_services_n <- wks_health_service
+  wks_to_health_services_p <- wks_health_service
+  wks_HS_visit_to_treatment <- 5.4
+  
+  wks_to_treat_if_Xrayed_n <- wks_to_health_services_n + wks_HS_visit_to_treatment
+  wks_to_treat_p <- wks_to_health_services_p + wks_HS_visit_to_treatment
+  
+  ## Xray related parameters
+  prop_access_Xray <- 0.3
+  X_ray_sensitivity <- 0.8
+  prop_default_treatment <- 0.15
+  prop_treated_successfully <- 0.75
+  
+  ## New Intervention adjusted weeks
+  new_diag_sensitivity_n <- 0.7
+  new_diag_wks_to_treat_n <- wks_to_treat_if_Xrayed_n
+  
+  ## Rates of detection and recovery for both postive and negative sputum smear
+  intervention_rates <- list(
+    preinterv_detect_recover_n = (52 * prop_access_Xray*X_ray_sensitivity*(1 - prop_default_treatment)*prop_treated_successfully) / (wks_to_treat_if_Xrayed_n * timestep),
+    detect_recover_p = 52 * (1 - prop_default_treatment)*prop_treated_successfully / (wks_to_treat_p * timestep),
+    preinterv_detect_only_n =  52 * prop_access_Xray*X_ray_sensitivity / (wks_to_treat_if_Xrayed_n * timestep),
+    detect_only_p = 52 / (wks_to_treat_p * timestep),
+    interv_detect_recover_n = 52 * new_diag_sensitivity_n * (1 - prop_default_treatment) * prop_treated_successfully / (new_diag_wks_to_treat_n * timestep),
+    interv_detect_only_n = 52 * new_diag_sensitivity_n / (new_diag_wks_to_treat_n * timestep)
+    )
+
+  ## Intervention control parameters
+  yrs_evaluate <- 10
+  
   intervention_params <- list(
     intervention = intervention,
-    intervention_start = intervention_start
-    
+    intervention_start = intervention_start,
+    yrs_evaulate = yrs_evaluate,
+    yr_eval_impact = intervention_start + yrs_evaluate  
   )
-  return(params)
+  return(c(params, intervention_rates, intervention_params))
 }
                                                                                                                                               
                                                                                                                                                  
