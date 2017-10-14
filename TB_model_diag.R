@@ -152,6 +152,18 @@ params_TB_model_diag <- function(ecr_pyr = 15, wks_health_service = 52,
     yrs_evaulate = yrs_evaluate,
     yr_eval_impact = intervention_start + yrs_evaluate  
   )
+  
+  ## Cost parameters
+  
+  rate_ratio_attendance_non_TB_vs_TB <-  0.01
+  
+  costs_params <- list(
+    rate_ratio_attendance_non_TB_vs_TB = rate_ratio_attendance_non_TB_vs_TB,
+    test_non_TBcases = 52 * rate_ratio_attendance_non_TB_vs_TB / (timestep * wks_to_treat_p),
+    new_diagnostic_cost = 20,                                                                                                                          
+    smear_cost = 5,                                                                                                                                       
+    X_ray_cost = 10 
+  )
   return(c(params, intervention_rates, intervention_params))
 }
                                                                                                                                               
