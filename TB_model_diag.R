@@ -72,9 +72,43 @@ TB_model_diag <- function(t, x, params) {
                             TB_mort_rate_pHK = summary_measures["total_new_deaths.I_n"] * 100000 * timestep / N,
                             TB_prevalence = (I_n + I_p)/N
       )
-  
+      
+      ## Intervention measures
+      intervention_measures <- c(
+        total_new_diag_n  = I_n * detect_only_n,
+        total_new_diag_p = I_p * detect_only_p,
+        smear_exams_p = I_p * test_TBcases,
+        smear_exams_n = I_n * test_TBcases,
+        smear_exams_no_TBcases = (1 - summary_measures["TB_prevalence.I_n"]) * test_non_TBcases * N
+      )
+      
+      ## Time varying intervention measures
+      if (intervention == 1 && t/timestep >= intervention_start) { 
+        intervention_measures <- c(intervention_measures,
+                                   Xray_exams_n = prop_access_Xray * intervention_measures["smear_exams_n.I_n"],
+                                   Xray_exams_non_TBcases = prop_access_Xray * intervention_measures["smear_exams_non_TBcases.TB_prevalence.I_n"],
+                                   new_test_n.smear_exams_n.I_n = 0,
+                                   new_test_non_TBcases.smear_exams_non_TBcases.TB_prevalence.I_n = 0
+                                   )
+      } else{
+        intervention_measures <- c(intervention_measures,
+                                   Xray_exams_n.smear_exams_n.I_n = 0,
+                                   Xray_exams_non_TBcases.smear_exams_non_TBcases.TB_prevalence.I_n = 0,
+                                   new_test_n = intervention_measures["smear_exams_n.I_n"],
+                                   new_test_non_TBcases = intervention_measures["smear_exams_non_TBcases.TB_prevalence.I_n"]
+        ) 
+      }
+      
+      ## Complex intervention measurs
+      intervention_measures <- c(intervention_measures,
+        total_new_diag = intervention_measures["total_new_diag_n.I_n"] + intervention_measures["total_new_diag_p.I_p"],
+        total_smear_exams = intervention_measures["smear_exams_n.I_n"] + intervention_measures["smear_exams_p.I_p"] + intervention_measures["smear_exams_non_TBcases.TB_prevalence.I_n"],
+        total_Xray_exams = intervention_measures["Xray_exams_n.smear_exams_n.I_n"] + intervention_measures["Xray_exams_non_TBcases.smear_exams_non_TBcases.TB_prevalence.I_n"],
+        total_new_diag_tests = intervention_measures["new_test_n.smear_exams_n.I_n"] + intervention_measures["new_test_non_TBcases.smear_exams_non_TBcases.TB_prevalence.I_n"]
+      )
+      
     ## output
-    list(derivatives, summary_measures)
+    list(derivatives, c(summary_measures, intervention_measures))
   })
 }
 
@@ -135,6 +169,7 @@ params_TB_model_diag <- function(ecr_pyr = 15, wks_health_service = 52,
   
   ## Rates of detection and recovery for both postive and negative sputum smear
   intervention_rates <- list(
+    prop_access_Xray = prop_access_Xray,
     preinterv_detect_recover_n = (52 * prop_access_Xray*X_ray_sensitivity*(1 - prop_default_treatment)*prop_treated_successfully) / (wks_to_treat_if_Xrayed_n * timestep),
     detect_recover_p = 52 * (1 - prop_default_treatment)*prop_treated_successfully / (wks_to_treat_p * timestep),
     preinterv_detect_only_n =  52 * prop_access_Xray*X_ray_sensitivity / (wks_to_treat_if_Xrayed_n * timestep),
@@ -159,12 +194,13 @@ params_TB_model_diag <- function(ecr_pyr = 15, wks_health_service = 52,
   
   costs_params <- list(
     rate_ratio_attendance_non_TB_vs_TB = rate_ratio_attendance_non_TB_vs_TB,
+    test_TBcases = 52 / (wks_to_treat_p * timestep),
     test_non_TBcases = 52 * rate_ratio_attendance_non_TB_vs_TB / (timestep * wks_to_treat_p),
     new_diagnostic_cost = 20,                                                                                                                          
     smear_cost = 5,                                                                                                                                       
     X_ray_cost = 10 
   )
-  return(c(params, intervention_rates, intervention_params))
+  return(c(params, intervention_rates, intervention_params, costs_params))
 }
                                                                                                                                               
                                                                                                                                                  
