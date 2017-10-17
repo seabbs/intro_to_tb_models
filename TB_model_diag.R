@@ -99,6 +99,7 @@ TB_model_diag <- function(t, x, params) {
         ) 
       }
       
+
       ## Complex intervention measurs
       intervention_measures <- c(intervention_measures,
         total_new_diag = intervention_measures["total_new_diag_n.I_n"] + intervention_measures["total_new_diag_p.I_p"],
@@ -203,7 +204,54 @@ params_TB_model_diag <- function(ecr_pyr = 15, wks_health_service = 52,
   return(c(params, intervention_rates, intervention_params, costs_params))
 }
                                                                                                                                               
-                                                                                                                                                 
-                                                                                                                                                 
-                                                                                                                                                 
-                                                                                                                                                 
+## Cumulative measures                                                                                                                                                
+cum_measures <- function(model_traj, params) {
+  model_traj <- as.data.frame(model_traj) %>% as_tibble
+  
+  ## Filter based on start time
+  model_traj <- model_traj[unlist(model_traj[["year"]]) >= params["intervention_start"] & 
+                             unlist(model_traj[["year"]]) <= params["yr_eval_impact"], ]
+  
+  with(model_traj,{
+    df <- data_frame(Year = year,
+                     Cases = ifelse(params["intervention"] == 1, total_new_cases.H, 0),
+                     Infections = ifelse(params["intervention"] == 1, total_new_infs.I_n, 0),
+                     Deaths = ifelse(params["intervention"] == 1, total_new_deaths.I_n, 0),
+                     Diagnoses = ifelse(params["intervention"] == 1, total_new_diag.total_new_diag_n.I_n, 0)
+    ) %>% 
+      mutate(cum_cases = cumsum(Cases),
+             cum_inf = cumsum(Infections),
+             cum_deaths = cumsum(Deaths),
+             cum_diag = cumsum(Diagnoses)) %>% 
+      mutate(Cases = round(cum_cases, digits = 0),
+             Infections = round(cum_inf, digits = 0),
+             Deaths = round(cum_deaths, digits = 0),
+             Diagnoses = round(cum_diag, digits = 0)) %>% 
+      select(-cum_cases, -cum_inf, -cum_deaths, -cum_diag)
+    
+    df
+  })
+
+}                                                                                                                                              
+ 
+## Diagnosis summary
+sum_diag <- function(model_traj, start_time = 2010) {
+  model_traj <- as.data.frame(model_traj) %>% as_tibble
+  
+  ## Filter based on start time
+  model_traj <- model_traj[unlist(model_traj[["year"]]) >= start_time, ]
+  
+  with(model_traj,{
+    df <- data_frame(Year = year,
+                     `Sputum negative` = total_new_diag_n.I_n,
+                     `Sputum positive` = total_new_diag_p.I_p,
+                     `TB cases` = total_new_diag.total_new_diag_n.I_n) %>% 
+      mutate(`Sputum negative` = round(`Sputum negative`, digits = 0),
+             `Sputum positive` = round(`Sputum positive`, digits = 0),
+             `TB cases` = round(`TB cases`, digits = 0))
+    
+    df
+    
+  })
+}
+## Test                                                                                                                                              

@@ -11,6 +11,8 @@ library(DT)
 source("TB_model.R")
 source("graph_tb_model.R")
 source("TB_model_diag.R")
+source("graph_tb_model_diag.R")
+
 
 sidebar <- dashboardSidebar(
   hr(),
@@ -132,6 +134,12 @@ body <- dashboardBody(
                      tabPanel(title = "Annual Risk",
                               plotlyOutput("plot_annual_risk_diag")
                      ),
+                     tabPanel(title = "Cumulative Counts",
+                              plotlyOutput("plot_cum")
+                     ),
+                     tabPanel(title = "Diagnoses",
+                              plotlyOutput("plot_diag")
+                     ),
                      tabPanel(title = "Proportions",
                               plotlyOutput("plot_props_diag")
                      )
@@ -141,6 +149,12 @@ body <- dashboardBody(
                      side = "right",
                      tabPanel(title = "Rates and Annual Risk",
                               DT::dataTableOutput("rates_table_diag")
+                     ),
+                     tabPanel(title = "Cumulative Counts",
+                              DT::dataTableOutput("cum_table")
+                     ),
+                     tabPanel(title = "Diagnoses",
+                              DT::dataTableOutput("diag_table")
                      ),
                      tabPanel(title = "Proportions", 
                               DT::dataTableOutput("props_table_diag")

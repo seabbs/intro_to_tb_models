@@ -11,6 +11,7 @@ library(deSolve)
 source("TB_model.R")
 source("graph_tb_model.R")
 source("TB_model_diag.R")
+source("graph_tb_model_diag.R")
 
 ## Stop spurious warnings
 options(warn = -1)
@@ -110,20 +111,25 @@ shinyServer(function(input, output) {
   ## TB model with diagnostics
   
   ## Run TB model
-  model_traj_diag <- reactive({
+  diag_params <- reactive({
     if (input$intervention) {
       intervention <- 1
     } else{
       intervention <- 0
     }
-    ##Check model runs
-    initial <- init_TB_model()
-    times <- seq(0, 2024*as.numeric(input$timestep_diag), 1)
+    
     params <- params_TB_model_diag(ecr_pyr = input$ecr_diag,  wks_health_service = 52,
                                    prot_reinf = 0.65, intervention = intervention, 
                                    intervention_start = 2014,
                                    timestep = as.numeric(input$timestep_diag))
-    model_traj <- deSolve::lsoda(initial, times, TB_model_diag, params)
+  })
+  
+  model_traj_diag <- reactive({
+
+    ##Check model runs
+    initial <- init_TB_model()
+    times <- seq(0, 2024*as.numeric(input$timestep_diag), 1)
+    model_traj <- deSolve::lsoda(initial, times, TB_model_diag, diag_params())
     
   })
   
@@ -203,6 +209,61 @@ shinyServer(function(input, output) {
     orderClasses = TRUE)
   )
 
+  ## Cumulative measures
+  cum_traj <- reactive({
+
+    cum_measures(model_traj_diag(), diag_params())
+  })
+  
+  ##Cum as table
+  output$cum_table <- DT::renderDataTable({
+    cum_traj()
+  },
+  options = list(
+    pageLength = 5,
+    scrollX = TRUE,
+    scrollY = TRUE,
+    orderClasses = TRUE)
+  )
+  
+  ## Plot cum
+  output$plot_cum <- renderPlotly({
+    plot <- cum_traj() %>% 
+      graph_cum
+    
+    ggplotly(plot)
+  })
+  
+  ## Diagnoses measures
+  sum_diag_traj <- reactive({
+    if (input$burn_in_diag) {
+      start_time <- 0
+    }else{
+      start_time <- 2010
+    }
+    
+    sum_diag(model_traj_diag(), start_time = start_time)
+  })
+  
+  ##Cum as table
+  output$diag_table <- DT::renderDataTable({
+    sum_diag_traj()
+  },
+  options = list(
+    pageLength = 5,
+    scrollX = TRUE,
+    scrollY = TRUE,
+    orderClasses = TRUE)
+  )
+  
+  ## Plot cum
+  output$plot_diag <- renderPlotly({
+    plot <- sum_diag_traj() %>% 
+      graph_diag
+    
+    ggplotly(plot)
+  })
+  
   output$downloadData2 <- downloadHandler(filename = "ui.R",
                                           content = function(file) {
                                             file.copy("ui.R", file, overwrite = TRUE)
