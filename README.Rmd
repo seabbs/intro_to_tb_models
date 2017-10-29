@@ -43,7 +43,7 @@ docker pull seabbs/intro_to_tb_models
 docker run --rm -p 3838:3838 seabbs/intro_to_tb_models
 ```
 
-The shiny server can be found on port `:3838` at your local machines ip (or localhost on windows), fcdashboard can be found at `your-ip:3838/intro_to_tb_models`.
+The shiny server can be found on port `:3838` at your local machines ip (or localhost on windows), intro_to_tb_models can be found at `your-ip:3838/intro_to_tb_models`.
 
 
 
