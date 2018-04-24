@@ -30,5 +30,5 @@ ADD . home/intro_to_tb_models
 
 EXPOSE 3838
 
-CMD R -e 'shiny::runApp("home/intro_to_tb_models", port = 3838)'
+CMD Rscript -e 'shiny::runApp("home/intro_to_tb_models", port = 3838, host = "0.0.0.0")'
 
