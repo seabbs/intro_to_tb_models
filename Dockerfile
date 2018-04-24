@@ -1,11 +1,15 @@
-## Start with the tidyverse docker image
-FROM rocker/shiny:latest
+
+## Start rocker r image
+FROM rocker/r-ver:3.4.4
 
 MAINTAINER "Sam Abbott" contact@samabbott.co.uk
+
+## Get libs required by packages
 
 RUN apt-get update && \
     apt-get install -y \
     libssl-dev \
+    libcurl4-openssl-dev \
     libssh2-1-dev \
     libnlopt0 \
     libnlopt-dev \
@@ -15,14 +19,17 @@ RUN apt-get update && \
     libproj-dev \
     && apt-get clean
 
-## Install cran packages
-RUN install2.r --error \
-    --deps TRUE \
-     shinydashboard \
-     tidyverse \
-     DT \
-     rmarkdown \
-     plotly 
+## Install R packages - MRAN
+RUN Rscript -e 'install.packages(c("shiny", "shinydashboard", "tidyverse"))'
 
-RUN rm -r /srv/shiny-server/*
-ADD . /srv/shiny-server/intro_to_to_models
+RUN Rscript -e 'install.packages(c("DT", "rmarkdown", "plotly"))'
+
+ADD . home/intro_to_tb_models
+
+WORKDIR  home/intro_to_tb_models
+
+EXPOSE 3838
+
+## Create log file
+CMD R -e 'shiny::runApp(port = 3838)'
+
