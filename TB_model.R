@@ -1,5 +1,5 @@
 #Packages
-library(tidyverse)
+source("load_packages.R")
 
 ## Model equations
 TB_model <- function(t, x, params) {

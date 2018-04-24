@@ -1,10 +1,5 @@
 #Load packages
-library(shiny)
-library(shinydashboard)
-library(tidyverse)
-library(plotly)
-library(DT)
-library(deSolve)
+source("load_packages.R")
 
 
 ##Load code

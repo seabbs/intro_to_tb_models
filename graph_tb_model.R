@@ -1,4 +1,4 @@
-library(tidyverse)
+source("load_packages.R")
 
 graph_rates <- function(df){
   plot <- df %>%

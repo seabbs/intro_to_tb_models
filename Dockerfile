@@ -20,7 +20,9 @@ RUN apt-get update && \
     && apt-get clean
 
 ## Install R packages - MRAN
-RUN Rscript -e 'install.packages(c("shiny", "shinydashboard", "tidyverse"))'
+RUN Rscript -e 'install.packages(c("shiny", "shinydashboard"))'
+
+Run Rscript -e 'install.packages(c("tibble", "dplyr", "tidyr", "ggplot2"))'
 
 RUN Rscript -e 'install.packages(c("DT", "rmarkdown", "plotly"))'
 

@@ -16,7 +16,10 @@ To install and run the shiny app locally on your own computer you will need to f
 install.packages("shiny")
 install.packages("shinydashboard")
 install.packages("DT")
-install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("tibble")
 install.packages("rmarkdown")
 install.packages("plotly")
 ```
@@ -34,4 +37,4 @@ docker pull seabbs/intro_to_tb_models
 docker run --rm -p 3838:3838 seabbs/intro_to_tb_models
 ```
 
-The shiny server can be found on port `:3838` at your local machines ip (or localhost on windows), fcdashboard can be found at `your-ip:3838/intro_to_tb_models`.
+The shiny app can be found on port `:3838` at your local machines ip (or localhost on windows).
