@@ -24,7 +24,7 @@ RUN Rscript -e 'install.packages(c("shiny", "shinydashboard"))'
 
 Run Rscript -e 'install.packages(c("tibble", "dplyr", "tidyr", "ggplot2"))'
 
-RUN Rscript -e 'install.packages(c("DT", "rmarkdown", "plotly"))'
+RUN Rscript -e 'install.packages(c("DT", "rmarkdown", "plotly", "deSolve"))'
 
 ADD . home/intro_to_tb_models
 
