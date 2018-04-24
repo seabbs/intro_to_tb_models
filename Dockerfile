@@ -26,10 +26,7 @@ RUN Rscript -e 'install.packages(c("DT", "rmarkdown", "plotly"))'
 
 ADD . home/intro_to_tb_models
 
-WORKDIR  home/intro_to_tb_models
-
 EXPOSE 3838
 
-## Create log file
-CMD R -e 'shiny::runApp(port = 3838)'
+CMD R -e 'shiny::runApp("home/intro_to_tb_models", port = 3838)'
 
